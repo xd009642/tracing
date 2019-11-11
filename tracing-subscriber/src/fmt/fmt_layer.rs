@@ -304,6 +304,15 @@ impl<E> fmt::Debug for FormattedFields<E> {
     }
 }
 
+impl<E> FormattedFields<E> {
+    pub fn new(fmt_fields: String) -> Self {
+        Self {
+            fmt_fields,
+            _format_event: PhantomData,
+        }
+    }
+}
+
 // === impl FmtLayer ===
 
 impl<S, N, E, W> Layer<S> for FmtLayer<S, N, E, W>
