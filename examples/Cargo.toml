@@ -9,6 +9,7 @@ edition = "2018"
 # tracing crates
 tracing = "0.1"
 tracing-core = "0.1"
+tracing-error = { path = "../tracing-error" }
 tracing-tower = { version = "0.1.0", path = "../tracing-tower" }
 tracing-subscriber = { version = "0.1", path = "../tracing-subscriber", features = ["json", "chrono"] }
 tracing-futures = { version = "0.1.0", path = "../tracing-futures" }
