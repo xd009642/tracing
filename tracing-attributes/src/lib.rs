@@ -69,7 +69,7 @@ use quote::{quote, quote_spanned, ToTokens};
 use syn::{
     spanned::Spanned, AttributeArgs, FieldPat, FnArg, Ident, ItemFn, Lit, LitInt, Meta, MetaList,
     MetaNameValue, NestedMeta, Pat, PatIdent, PatReference, PatStruct, PatTuple, PatTupleStruct,
-    PatType, Signature,
+    PatType, Signature, ReturnType, Type
 };
 
 /// Instruments a function to create and enter a `tracing` [span] every time
@@ -168,11 +168,10 @@ pub fn instrument(args: TokenStream, item: TokenStream) -> TokenStream {
     } = sig;
 
     let mut actually_async = false;
-    if let ReturnType::Type(_, ty) = output {
-        if let Type::Path(typ) = ty  {
-            if let Some(seg) =  typ.segments.pop() {
-                let val = seg.value();
-                if val.ident == "Box" {
+    if let ReturnType::Type(_, ty) = return_type.clone() {
+        if let Type::Path(typ) = *ty  {
+            if let Some(value) =  typ.path.segments.iter().next() {
+                if value.ident == "Box" {
                     
                 }
             }
