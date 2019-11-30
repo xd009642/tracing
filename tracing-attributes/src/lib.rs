@@ -148,6 +148,7 @@ pub fn instrument(args: TokenStream, item: TokenStream) -> TokenStream {
         sig,
         ..
     } = input;
+    
 
     let Signature {
         output: return_type,
@@ -165,6 +166,18 @@ pub fn instrument(args: TokenStream, item: TokenStream) -> TokenStream {
             },
         ..
     } = sig;
+
+    let mut actually_async = false;
+    if let ReturnType::Type(_, ty) = output {
+        if let Type::Path(typ) = ty  {
+            if let Some(seg) =  typ.segments.pop() {
+                let val = seg.value();
+                if val.ident == "Box" {
+                    
+                }
+            }
+        }
+    }
 
     // function name
     let ident_str = ident.to_string();
@@ -190,7 +203,7 @@ pub fn instrument(args: TokenStream, item: TokenStream) -> TokenStream {
     // If the function is an `async fn`, this will wrap it in an async block,
     // which is `instrument`ed using `tracing-futures`. Otherwise, this will
     // enter the span and then perform the rest of the body.
-    let body = if asyncness.is_some() {
+    let body = if asyncness.is_some() || actually_async {
         // We can't quote these keywords in the `quote!` macro, since their
         // presence in the file will make older Rust compilers fail to build
         // this crate. Instead, we construct token structs for them so the
